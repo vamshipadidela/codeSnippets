@@ -13,6 +13,7 @@ import java.util.Map;
 *  Reflections
 *  Change private field
 *
+* /
 public class changePrivateField{
     private XMLParser parser;
     private Map<String,ObjectX> testObjectXMap;
