@@ -1,5 +1,7 @@
 package ProjectX;
 
+import ProjectX.X;
+import ProjectX.ObjectZ;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +21,7 @@ public class changePrivateField{
     private Map<String,ObjectX> testObjectXMap;
     private String dummyTestXMLPath = "/Users/vamshi/Documents/Workspace/ProjectX/src/conf/config.xml";
     private int expectedNumberOfObjects;
+    private String expectedMode;
     
     //parsing the XML file of objects defined into a Map with all the objects
     @Before
@@ -28,6 +31,7 @@ public class changePrivateField{
         pathField.setAccessible(true);
         pathField.set(parser,dummyTestXMLPath);
         expectedNumberOfObjects = 3;
+        expectedMode = "sum";
     }
     
     //compares the expected number of Objects with the number of Objects created through parsing
@@ -41,4 +45,17 @@ public class changePrivateField{
         Assert.assertEquals("ObjectX:ParseXMLFile:Checking count of objects returned by XML parsing",expectedNumberOfObjects, testObjectXMap.size());
     }
     
+    // Extended example - Checking mode in different class of different object after parsing
+    @Test
+    public void objectModeParser() throws Exception {
+        Field field  = sensor.getX().getClass().getDeclaredField("ObjectZ");
+        field.setAccessible(true);
+        ObjectZ objectZ = (ObjectZ) field.get(ObjectX.getInspector());
+        Field modeField = objectZ.getClass().getDeclaredField("mode");
+        modeField.setAccessible(true);
+        String mode = (String) modeField.get(objectZ);
+        modeField.setAccessible(false);
+        field.setAccessible(false);
+        Assert.assertEquals("ObjectX:ParseXMLFile: Checking ObjectZ class of different object after parsing",expectedMode,mode);
+    }
 }
